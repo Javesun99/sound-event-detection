@@ -12,9 +12,9 @@ import torch.utils.data as utils
 # from models.SELDNet import Seldnet_vanilla, Seldnet_augmented
 from SEDNet import Seldnet_vanilla, Seldnet_augmented, QSeldnet_augmented, PHMSeldnet_augmented, Full_PHMSeldnet_augmented
 from utility_functions import load_model, save_model
-
+from models_convvit import convvit_base_patch16
 import matplotlib.pyplot as plt
-
+from cctmodels import CCTNet
 '''
 Train our baseline model for the Task2 of the L3DAS21 challenge.
 This script saves the best model checkpoint, as well as a dict containing
@@ -224,7 +224,9 @@ def main(args):
                     fc_size=args.fc_size, dropout_perc=args.dropout_perc,
                     cnn_filters=args.cnn_filters, class_overlaps=args.class_overlaps,
                     verbose=args.verbose, n=4)
-
+    if args.architecture == 'vit':
+        # model = convvit_base_patch16()
+        model = CCTNet()
 
 
 
@@ -276,15 +278,18 @@ def main(args):
                 # Compute loss for each instrument/model
                 optimizer.zero_grad()
                 # sed, doa = model(x)
+
                 sed = model(x)
-
-
+                # print(sed.shape)
 
                 # loss = seld_loss(x, target, model, criterion_sed, criterion_doa)
 
                 target_sed = target[:,:,:args.output_classes*args.class_overlaps]
                 sed_flat = torch.flatten(sed, start_dim=1)
                 target_sed_flat = torch.flatten(target_sed, start_dim=1)
+
+                # print(target_sed_flat.shape)
+
                 loss = criterion_sed(sed_flat, target_sed_flat)
 
                 loss.backward()
