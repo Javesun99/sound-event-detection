@@ -31,5 +31,5 @@ class CCTNet(nn.Module):
     def forward(self, x):
         x = self.cct(x)
         x = F.relu(self.fc1(x))
-        x = x.reshape(1,600,42)
+        x = x.view(1,600,42)
         return x

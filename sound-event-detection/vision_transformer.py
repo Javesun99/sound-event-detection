@@ -284,7 +284,7 @@ class ConvViT(nn.Module):
 
         # Classifier head
         self.head = nn.Linear(embed_dim[-1], num_classes) if num_classes > 0 else nn.Identity()
-
+        self.fc1 = nn.Linear(num_classes,25200)
         trunc_normal_(self.pos_embed, std=.02)
         self.apply(self._init_weights)
 
@@ -328,6 +328,8 @@ class ConvViT(nn.Module):
     def forward(self, x):
         x = self.forward_features(x)
         x = self.head(x)
+        x = self.fc1(x)
+        x = x.view(1, 600, 42)
         return x
 
 
