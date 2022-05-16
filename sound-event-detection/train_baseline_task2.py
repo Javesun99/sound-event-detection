@@ -225,8 +225,8 @@ def main(args):
                     cnn_filters=args.cnn_filters, class_overlaps=args.class_overlaps,
                     verbose=args.verbose, n=4)
     if args.architecture == 'vit':
-        # model = convvit_base_patch16()
-        model = CCTNet()
+        model = convvit_base_patch16()
+        # model = CCTNet()
 
 
 
